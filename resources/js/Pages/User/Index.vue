@@ -1,11 +1,14 @@
 <template>
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-12 mb-3">
+            <div class="col-md-12">
                 <h1>User List</h1>
-                <a href="#" class="btn btn-primary">Create</a>
+                <inertia-link href="/user/create" class="btn btn-primary">Create</inertia-link>
             </div>
-            <div class="col-md-12" v-if="users.length > 0">
+            <div class="col-md-12 mt-3 alert alert-success" v-if="success">
+                {{ success }}
+            </div>
+            <div class="col-md-12 mt-4" v-if="users.length > 0">
                 <table class="table">
                     <thead>
                         <tr>
@@ -37,7 +40,7 @@
 <script>
 export default {
     name: 'Index',
-    props: ['users'],
+    props: ['users', 'success'],
     methods: {
         destroy(id) {
             this.$inertia.delete(`/user/${id}`);

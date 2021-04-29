@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('User/Create');
     }
 
     /**
@@ -38,7 +38,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        User::create(['name' => $request->name, 'email' => $request->email, 'password' => $request->password]);
+        session()->flash('success', 'A user was created successfully!');
+        return redirect('/user');
     }
 
     /**
@@ -84,6 +86,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        session()->flash('success', 'A user was deleted successfully!');
         return redirect(url('/user'));
     }
 }

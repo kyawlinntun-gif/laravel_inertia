@@ -26,5 +26,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 /* ---------- Start of Vue Routes ---------- */
 Route::get('/user', [UserController::class, 'index']);
+Route::get('/user/create', [UserController::class, 'create']);
+Route::post('/user', [UserController::class, 'store']);
 Route::delete('/user/{user}', [UserController::class, 'destroy']);
 /* ---------- End of Vue Routes ---------- */
