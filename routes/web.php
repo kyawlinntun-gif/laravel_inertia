@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,10 +20,11 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 });
 
-Route::get('/about', function () {
-    return Inertia::render('About');
-});
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/* ---------- Start of Vue Routes ---------- */
+Route::get('/user', [UserController::class, 'index']);
+Route::delete('/user/{user}', [UserController::class, 'destroy']);
+/* ---------- End of Vue Routes ---------- */
