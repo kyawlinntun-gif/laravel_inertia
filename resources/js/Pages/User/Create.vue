@@ -3,32 +3,19 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h3>Create A User</h3>
-                <form @submit.prevent="submit">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" class="form-control" v-model="form.name">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" class="form-control" v-model="form.email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="form-control" v-model="form.password">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Create</button>
-                        <inertia-link href="/user" class="btn btn-secondary float-end">Back</inertia-link>
-                    </div>
-                </form>
+                <UserForm :user="user" :errors="errors" v-on:submit="submit" ></UserForm>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import UserForm from './UserForm';
+
 export default {
+  components: { UserForm },
     name: 'Create',
+    props: ['user','errors'],
     data() {
         return {
             form: {
@@ -39,8 +26,8 @@ export default {
         }
     },
     methods: {
-        submit() {
-            this.$inertia.post('/user/', this.form);
+        submit(form) {
+            this.$inertia.post('/user/', form);
         }
     }
 }

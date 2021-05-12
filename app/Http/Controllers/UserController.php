@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,10 +15,12 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $users = User::filter($request->only('search'))->orderBy('id', 'desc')->paginate();
         return Inertia::render('User/Index', [
-            'users' => User::all()
+            'users' => $users,
+            'search' => $request->get('search')
         ]);
     }
 
@@ -27,7 +31,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('User/Create');
+        return Inertia::render('User/Create', [
+            'user' => new User()
+        ]);
     }
 
     /**
@@ -36,9 +42,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        User::create(['name' => $request->name, 'email' => $request->email, 'password' => $request->password]);
+        User::create($request->only('name', 'email', 'password'));
         session()->flash('success', 'A user was created successfully!');
         return redirect('/user');
     }
@@ -60,9 +66,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return Inertia::render('User/Edit', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -72,9 +80,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        //
+        if ($request->filled('password')) {
+            $user->update($request->only('name', 'email', 'password'));
+        } else {
+            $user->update($request->only('name', 'email'));
+        }
+
+        session()->flash('success', 'A user was updated successfully!');
+        return redirect('/user');
     }
 
     /**
